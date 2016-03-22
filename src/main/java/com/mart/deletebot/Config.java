@@ -5,6 +5,7 @@ public class Config {
     public boolean logMessages;
     public boolean logDeletes;
     public boolean logEdits;
+    public boolean addRoleToLog;
 
     public boolean isLogMessages() {
         return logMessages;
@@ -28,5 +29,13 @@ public class Config {
 
     public void setLogEdits(boolean logEdits) {
         this.logEdits = logEdits;
+    }
+
+    public boolean isAddRoleToLog() {
+        return addRoleToLog;
+    }
+
+    public void setAddRoleToLog(boolean addRoleToLog) {
+        this.addRoleToLog = addRoleToLog;
     }
 }

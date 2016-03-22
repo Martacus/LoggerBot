@@ -7,11 +7,15 @@ import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.MessageUpdateEvent;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IRole;
+import sx.blah.discord.handle.obj.IUser;
 
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class DeleteEvent {
 
@@ -33,6 +37,8 @@ public class DeleteEvent {
 
     @EventSubscriber
     public void onDeleteEvent(MessageDeleteEvent event){
+        IUser user = event.getMessage().getAuthor();
+        IGuild guild = event.getMessage().getChannel().getGuild();
         if(config.isLogDeletes()){
             IChannel channel = event.getMessage().getChannel();
             if(checkForFile(channel.getName(), "logs\\deletes")){
@@ -41,6 +47,10 @@ public class DeleteEvent {
                     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(channelFile, true)));
                     String message =  "["+dateFormat.format(date) + "]" + event.getMessage().getAuthor().getName() +": "+ event.getMessage().toString();
                     out.println(message);
+                    if(config.isAddRoleToLog()){
+                        String roles = getRoles(user, guild);
+                        out.println(roles);
+                    }
                     out.close();
                 }catch (IOException e) {
                     e.printStackTrace();
@@ -51,6 +61,8 @@ public class DeleteEvent {
 
     @EventSubscriber
     public void onEditEvent(MessageUpdateEvent event){
+        IUser user = event.getOldMessage().getAuthor();
+        IGuild guild = event.getOldMessage().getChannel().getGuild();
         if(config.isLogEdits()) {
             IChannel channel = event.getOldMessage().getChannel();
             String oldMessage = event.getOldMessage().toString();
@@ -61,6 +73,10 @@ public class DeleteEvent {
                     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(channelFile, true)));
                     String message = "[" + dateFormat.format(date) + "]" + event.getOldMessage().getAuthor().getName() + ": " + oldMessage + " {|TO|} " + newMessage;
                     out.println(message);
+                    if(config.isAddRoleToLog()){
+                        String roles = getRoles(user, guild);
+                        out.println(roles);
+                    }
                     out.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -71,6 +87,8 @@ public class DeleteEvent {
 
     @EventSubscriber
     public void onMessageEvent(MessageReceivedEvent event){
+        IUser user = event.getMessage().getAuthor();
+        IGuild guild = event.getMessage().getChannel().getGuild();
         if(config.isLogMessages()) {
             IChannel channel = event.getMessage().getChannel();
             if (checkForFile(channel.getName(), "logs\\messages")) {
@@ -79,6 +97,10 @@ public class DeleteEvent {
                     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(channelFile, true)));
                     String message = "[" + dateFormat.format(date) + "]" + event.getMessage().getAuthor().getName() + ": " + event.getMessage().toString();
                     out.println(message);
+                    if(config.isAddRoleToLog()){
+                        String roles = getRoles(user, guild);
+                        out.println(roles);
+                    }
                     out.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -127,5 +149,14 @@ public class DeleteEvent {
             e.printStackTrace();
         }
         return false;
+    }
+
+    String getRoles(IUser user, IGuild guild){
+        String message = "";
+        List<IRole> roles = user.getRolesForGuild(guild);
+        for(IRole role : roles){
+            message += (role.getName() + " ");
+        }
+        return message;
     }
 }

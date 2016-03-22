@@ -1,1 +1,1 @@
-{"logMessages":true,"logDeletes":true,"logEdits":true}
+{"logMessages":false,"logDeletes":true,"logEdits":true,"addRoleToLog":true}

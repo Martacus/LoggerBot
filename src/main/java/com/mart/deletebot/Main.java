@@ -54,7 +54,7 @@ public class Main {
         try {
             if (file.createNewFile()){
                 PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
-                String message = "{\"logMessages\":false,\"logDeletes\":true,\"logEdits\":true}";
+                String message = "{\"logMessages\":false,\"logDeletes\":true,\"logEdits\":true,\"addRoleToLog\":false}";
                 out.println(message);
                 out.close();
             }else{
