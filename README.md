@@ -3,6 +3,8 @@ A bot that logs messages. Nice for keeping them trollers at bay.
 
 LoggerBot Exists solely for logging messages send in the Discord Channels the bot is connected to.
 
+Keep in mind, this is a W.I.P. bot.
+
 ##Setup
 
 1. Download the .jar and put in in the designated folder.
