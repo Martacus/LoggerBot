@@ -2,10 +2,10 @@ package com.mart.deletebot;
 
 public class Config {
 
-    public boolean logMessages;
-    public boolean logDeletes;
-    public boolean logEdits;
-    public boolean addRoleToLog;
+    private boolean logMessages;
+    private boolean logDeletes;
+    private boolean logEdits;
+    private boolean addRoleToLog;
 
     public boolean isLogMessages() {
         return logMessages;

@@ -40,7 +40,7 @@ public class Main {
             System.out.print("This is the error");
         }
         if (dispatcher != null) {
-            dispatcher.registerListener(new DeleteEvent());
+            dispatcher.registerListener(new MessageEvent());
         }
         else{
             System.out.print("This is DEFO the error");

@@ -6,10 +6,7 @@ import sx.blah.discord.handle.impl.events.MessageDeleteEvent;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.MessageUpdateEvent;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.*;
 
 import java.io.*;
 import java.text.DateFormat;
@@ -17,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class DeleteEvent {
+public class MessageEvent {
 
     private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private Date date = new Date();
@@ -27,12 +24,24 @@ public class DeleteEvent {
     @EventSubscriber
     public void onEnable(ReadyEvent event){
         System.out.println("Bot is ready and running, time to take them trollers down");
-        try {
-            config = new Gson().fromJson(new FileReader(new File("config.txt")), Config.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        reloadConfig();
         checkForDirectories();
+    }
+
+    @EventSubscriber
+    public void onCommandMessageEvent(MessageReceivedEvent event){
+        IUser user = event.getMessage().getAuthor();
+        IGuild guild = event.getMessage().getChannel().getGuild();
+        IMessage message = event.getMessage();
+        String[] messagesplit = message.toString().split(" ");
+        if(message.getContent().startsWith("-logger")){
+            if(messagesplit.length > 2){
+                String command = messagesplit[1];
+                if(command.equals("reload")){
+                    reloadConfig();
+                }
+            }
+        }
     }
 
     @EventSubscriber
@@ -158,5 +167,13 @@ public class DeleteEvent {
             message += (role.getName() + " ");
         }
         return message;
+    }
+
+    void reloadConfig(){
+        try {
+            config = new Gson().fromJson(new FileReader(new File("config.txt")), Config.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
